@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Possible
+Bundle-SymbolicName: com.coconut_palm_software.possible
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: com.coconut_palm_software.possible.Activator
+Bundle-Vendor: COCONUT_PALM_SOFTWARE
+Require-Bundle: org.eclipse.core.runtime
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
+Export-Package: com.coconut_palm_software.possible
