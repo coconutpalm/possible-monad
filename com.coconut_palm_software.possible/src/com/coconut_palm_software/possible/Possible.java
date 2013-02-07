@@ -19,13 +19,18 @@ import com.coconut_palm_software.possible.internal.Some;
 /**
  * A Java implementation of the "Option Monad" design pattern.  (Note that this
  * particular implementation isn't actually a full monad, but for our purposes
- * it doesn't matter.)  This is inspired by the following blog:
+ * it doesn't matter.)  
+ * <p>
+ * This is inspired by the following blog:
  * http://www.codecommit.com/blog/scala/the-option-pattern and also 
  * Functional Java (http://www.functionaljava.org)'s Option implementation.
+ * In addition, since this version is more of a Java collection in its idiomatic
+ * style, I have chosen to call it Possible<T> so that the static factory 
+ * method names work both when called in the fully-qualified form as well as
+ * when invoked using a static import.
  * <p>
  * The Option pattern provides a unified method for coding functions that could
- * return Some<T>(value) or also might fail to produce a value, and thus return
- * None<T>.
+ * return/accept a value or also might fail to produce a value.
  * <p>
  * Alternatively, you can think of an Option as a container that can contain at most
  * one element.  Our implementation takes this approach, and provides API that is 
@@ -38,14 +43,14 @@ import com.coconut_palm_software.possible.internal.Some;
  * This pattern makes explicit that a method might not return a value, eliminating
  * guesswork about if the method might return null when reading/learning APIs.
  *
- * @param <T> The type the Option encapsulates
+ * @param <T> The type the Possible encapsulates
  */
 public abstract class Possible<T> implements Iterable<T> {
 	/**
 	 * A convenience factory method meant to be imported statically and that
 	 * eliminates a lot of the boilerplate that Java generics impose.
 	 * 
-	 * @param <T> The type of Option object to create.  Usually inferred 
+	 * @param <T> The type of Possible object to create.  Usually inferred 
 	 * automatically by the compiler.
 	 * @param value The value to return.
 	 * @return a new object containing the specified value.
@@ -56,7 +61,7 @@ public abstract class Possible<T> implements Iterable<T> {
 	 * A convenience factory method meant to be imported statically and that
 	 * eliminates a lot of the boilerplate that Java generics impose.
 	 * 
-	 * @param <T> The type of Option object to create.  Usually inferred 
+	 * @param <T> The type of Possible object to create.  Usually inferred 
 	 * automatically by the compiler.
 	 * @param value The value to return.
 	 * @param status The IStatus containing extra information (possibly for logging).
@@ -68,7 +73,7 @@ public abstract class Possible<T> implements Iterable<T> {
 	 * A convenience factory method that eliminates a lot of the boilerplate that Java 
 	 * generics impose and makes code using the Possible pattern read more nicely.
 	 * 
-	 * @param <T> The type of Option object to create.  Usually inferred 
+	 * @param <T> The type of Possible object to create.  Usually inferred 
 	 * automatically by the compiler.
 	 * @return an empty container.
 	 */
@@ -78,7 +83,7 @@ public abstract class Possible<T> implements Iterable<T> {
 	 * A convenience factory method that eliminates a lot of the boilerplate that Java 
 	 * generics impose and makes code using the Possible pattern read more nicely.
 	 * 
-	 * @param <T> The type of Option object to create.  Usually inferred 
+	 * @param <T> The type of Possible object to create.  Usually inferred 
 	 * automatically by the compiler.
 	 * @param reason An IStatus containing a reason for the empty value.
 	 * @return an empty container containing the specified status.
@@ -103,9 +108,9 @@ public abstract class Possible<T> implements Iterable<T> {
 	abstract public boolean isEmpty();
 
     /**
-     * Return true if this Option contains a value or false if it is empty.
+     * Return true if this Possible contains a value or false if it is empty.
      * 
-     * @return true if this Option contains a value or false if it is empty.
+     * @return true if this Possible contains a value or false if it is empty.
      */
 	abstract public boolean hasValue();
     
@@ -132,7 +137,7 @@ public abstract class Possible<T> implements Iterable<T> {
 	abstract public <A> A[] toArray(A[] a);
 
 	/**
-     * Return the value inside the Option, or throw an UnsupportedOperationException
+     * Return the value inside the Possible, or throw an UnsupportedOperationException
      * if there is no value.
      * 
      * @return the encapsulated T or throw UnsupportedOperationException if empty
