@@ -12,6 +12,9 @@ package com.coconut_palm_software.possible;
 
 import org.eclipse.core.runtime.IStatus;
 
+import com.coconut_palm_software.possible.internal.None;
+import com.coconut_palm_software.possible.internal.Some;
+
 
 /**
  * A Java implementation of the "Option Monad" design pattern.  (Note that this
@@ -37,7 +40,7 @@ import org.eclipse.core.runtime.IStatus;
  *
  * @param <T> The type the Option encapsulates
  */
-abstract class Possible<T> implements Iterable<T> {
+public abstract class Possible<T> implements Iterable<T> {
 	/**
 	 * A convenience factory method meant to be imported statically and that
 	 * eliminates a lot of the boilerplate that Java generics impose.
@@ -90,35 +93,35 @@ abstract class Possible<T> implements Iterable<T> {
 	 * @param o The object to check
 	 * @return true if this container contains the specified object and false otherwise.
 	 */
-	abstract boolean contains(Object o);
+	abstract public boolean contains(Object o);
 
 	/**
 	 * Return true if this container has no elements inside it and false otherwise.
 	 * 
 	 * @return true if this container has no elements inside it and false otherwise.
 	 */
-	abstract boolean isEmpty();
+	abstract public boolean isEmpty();
 
     /**
      * Return true if this Option contains a value or false if it is empty.
      * 
      * @return true if this Option contains a value or false if it is empty.
      */
-	abstract boolean hasValue();
+	abstract public boolean hasValue();
     
     /**
      * Return 0 if this container is empty and 1 otherwise.
      * 
      * @return 0 if this container is empty and 1 otherwise.
      */
-	abstract int size();
+	abstract public int size();
 
 	/**
 	 * Returns the contents of the container as an Object array.
 	 * 
 	 * @return the contents of the container as an Object array.
 	 */
-	abstract Object[] toArray();
+	abstract public Object[] toArray();
 
 	/**
 	 * Return the contents of the container as a typed array of the specified type.
@@ -126,7 +129,7 @@ abstract class Possible<T> implements Iterable<T> {
 	 * @param a The array to return, after any elemnts in this container are stored.
 	 * @return the contents of the container as a typed array of the specified type.
 	 */
-	abstract <A> A[] toArray(A[] a);
+	abstract public <A> A[] toArray(A[] a);
 
 	/**
      * Return the value inside the Option, or throw an UnsupportedOperationException
@@ -134,7 +137,7 @@ abstract class Possible<T> implements Iterable<T> {
      * 
      * @return the encapsulated T or throw UnsupportedOperationException if empty
      */
-	abstract T get();
+	abstract public T get();
     
     /**
      * Return the encapsulated instance of T, if there is one, or alternatively
@@ -146,7 +149,7 @@ abstract class Possible<T> implements Iterable<T> {
      * @return the encapsulated instance of T, if there is one, or alternatively
      * return the defaultValue if there is no encapsulated T.
      */
-	abstract T getOrSubstitute(T defaultValue);
+	abstract public T getOrSubstitute(T defaultValue);
     
     /**
      * Return the encapsulated instance of T, if there is one.  If the 
@@ -158,7 +161,7 @@ abstract class Possible<T> implements Iterable<T> {
      * container is empty, throw the passed exception.
      * @throws E The exception type that could be thrown.
      */
-	abstract <E extends Throwable> T getOrThrow(E exception) throws E;
+	abstract public <E extends Throwable> T getOrThrow(E exception) throws E;
     
     /**
      * Return Status.OK_STATUS on success or possibly an IStaus with information
@@ -168,6 +171,6 @@ abstract class Possible<T> implements Iterable<T> {
      * 
      * @return IStatus The success/failure reason.
      */
-	abstract IStatus getStatus();
+	abstract public IStatus getStatus();
 }
  

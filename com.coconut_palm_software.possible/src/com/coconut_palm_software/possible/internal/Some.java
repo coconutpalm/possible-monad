@@ -8,101 +8,116 @@
  * Contributors:
  *    David Orme - initial API and implementation
  ******************************************************************************/
-package com.coconut_palm_software.possible;
+package com.coconut_palm_software.possible.internal;
 
 import java.util.Iterator;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
+import com.coconut_palm_software.possible.Nulls;
+import com.coconut_palm_software.possible.Possible;
+
 
 /**
- * An Option instance that does not contain any value.
+ * An Option instance that contains a value.
  * 
  * @param <T> The type that this Option is encapsulating.
  */
-final class None<T> extends Possible<T> {
- 
+public final class Some<T> extends Possible<T> {
+    private final T value;
     private IStatus status = null;
-
-    None() {}
  
-	None(IStatus status) {
-		this.status = status;
-	}
-
+    public Some(T value) {
+        this.value = value;
+    }
+ 
+    public Some(T value, IStatus status) {
+        this.value = value;
+        this.status = status;
+    }
+ 
     /* (non-Javadoc)
      * @see org.eclipse.e4.core.functionalprog.optionmonad.Option#get()
      */
     public T get() {
-        throw new UnsupportedOperationException("Cannot resolve value on None");
+        return value;
     }
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.e4.core.functionalprog.optionmonad.Option#getOrSubstitute(java.lang.Object)
 	 */
 	public T getOrSubstitute(T defaultValue) {
-		return defaultValue;
+		return value;
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.e4.core.functionalprog.optionmonad.Option#getOrThrow(java.lang.Throwable)
 	 */
-	public <E extends Throwable> T getOrThrow(E exception) throws E {
-		throw exception;
+	public <E extends Throwable> T getOrThrow(E exception) {
+		return value;
 	}
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.e4.core.functionalprog.optionmonad.Option#hasValue()
 	 */
 	public boolean hasValue() {
-		return false;
+		return true;
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.e4.core.functionalprog.optionmonad.Option#getReason()
+	 * @see org.eclipse.e4.core.functionalprog.optionmonad.Option#getStatus()
 	 */
 	public IStatus getStatus() {
-		return Nulls.valueOrSubstitute(status, Status.CANCEL_STATUS);
+		return Nulls.valueOrSubstitute(status, Status.OK_STATUS);
 	}
 
 	/* (non-Javadoc)
 	 * @see com.coconut_palm_software.possible.Possible#contains(java.lang.Object)
 	 */
 	@Override
-	boolean contains(Object o) {
-		return false;
+	public boolean contains(Object o) {
+		return value.equals(o);
 	}
 
 	/* (non-Javadoc)
 	 * @see com.coconut_palm_software.possible.Possible#isEmpty()
 	 */
 	@Override
-	boolean isEmpty() {
-		return true;
+	public boolean isEmpty() {
+		return false;
 	}
 
 	/* (non-Javadoc)
 	 * @see com.coconut_palm_software.possible.Possible#size()
 	 */
 	@Override
-	int size() {
-		return 0;
+	public int size() {
+		return 1;
 	}
 
 	/* (non-Javadoc)
 	 * @see com.coconut_palm_software.possible.Possible#toArray()
 	 */
 	@Override
-	Object[] toArray() {
-		return new Object[] {};
+	public Object[] toArray() {
+		return new Object[] {value};
 	}
 
 	/* (non-Javadoc)
 	 * @see com.coconut_palm_software.possible.Possible#toArray(A[])
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
-	<A> A[] toArray(A[] a) {
+	public <A> A[] toArray(A[] a) {
+		if (a.length < 1) {
+			a = (A[])java.lang.reflect.Array.newInstance(
+					a.getClass().getComponentType(), 1);
+		}
+		a[0] = (A) value;
+		if (a.length > 1) {
+			a[1] = null;
+		}
 		return a;
 	}
 	
@@ -112,15 +127,20 @@ final class None<T> extends Possible<T> {
 	@Override
 	public Iterator<T> iterator() {
 		return new Iterator<T>() {
+			boolean returnedValue = false;
 
 			@Override
 			public boolean hasNext() {
-				return false;
+				return !returnedValue;
 			}
 
 			@Override
 			public T next() {
-				throw new IndexOutOfBoundsException("Empty possible value cannot have a 'next' element");
+				if (hasNext()) {
+					returnedValue = true;
+					return value;
+				}
+				throw new IndexOutOfBoundsException("Past end of collection.");
 			}
 
 			@Override
@@ -129,3 +149,4 @@ final class None<T> extends Possible<T> {
 			}};
 	}
 }
+ 
