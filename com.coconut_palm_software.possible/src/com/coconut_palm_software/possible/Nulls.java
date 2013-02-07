@@ -74,7 +74,7 @@ public class Nulls {
 	 * @param value The value to wrap.
 	 * @return Possible.value(value) iff value != null or Possible.emptyValue() otherwise.
 	 */
-	public static <T> Possible<T> option(T value) {
+	public static <T> Possible<T> posible(T value) {
 		if (value != null) return Possible.value(value);
 		else return Possible.emptyValue();
 	}
