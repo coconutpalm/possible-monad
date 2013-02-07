@@ -20,9 +20,9 @@ import com.coconut_palm_software.possible.Possible;
 
 
 /**
- * An Option instance that contains a value.
+ * An Possible instance that contains a value.
  * 
- * @param <T> The type that this Option is encapsulating.
+ * @param <T> The type that this Possible<T> is encapsulating.
  */
 public final class Some<T> extends Possible<T> {
     private final T value;

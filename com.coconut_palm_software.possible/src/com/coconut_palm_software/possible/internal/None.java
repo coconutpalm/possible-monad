@@ -20,9 +20,9 @@ import com.coconut_palm_software.possible.Possible;
 
 
 /**
- * An Option instance that does not contain any value.
+ * An Possible instance that does not contain any value.
  * 
- * @param <T> The type that this Option is encapsulating.
+ * @param <T> The type that this Possible<T> is encapsulating.
  */
 public final class None<T> extends Possible<T> {
  
