@@ -107,7 +107,14 @@ final class Some<T> extends Possible<T> {
 	@SuppressWarnings("unchecked")
 	@Override
 	<A> A[] toArray(A[] a) {
+		if (a.length < 1) {
+			a = (A[])java.lang.reflect.Array.newInstance(
+					a.getClass().getComponentType(), 1);
+		}
 		a[0] = (A) value;
+		if (a.length > 1) {
+			a[1] = null;
+		}
 		return a;
 	}
 	
