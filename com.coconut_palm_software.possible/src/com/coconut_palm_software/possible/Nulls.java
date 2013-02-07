@@ -78,4 +78,16 @@ public class Nulls {
 		if (value != null) return Possible.value(value);
 		else return Possible.emptyValue();
 	}
+	
+	/**
+	 * Checks that 'value' is not null and throws IllegalArgumentException if it is.
+	 * 
+	 * @param value the value to check
+	 * @param variableName a human-readable variable name to include in the error message
+	 */
+	public static void assertNotNull(Object value, String variableName) {
+		if (value == null) {
+			throw new IllegalArgumentException("'" + variableName + "' cannot be null");
+		}
+	}
 }

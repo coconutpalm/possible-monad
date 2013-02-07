@@ -29,10 +29,13 @@ public final class Some<T> extends Possible<T> {
     private IStatus status = null;
  
     public Some(T value) {
+    	Nulls.assertNotNull(value, "value");
         this.value = value;
     }
  
     public Some(T value, IStatus status) {
+    	Nulls.assertNotNull(value, "value");
+    	Nulls.assertNotNull(status, "status");
         this.value = value;
         this.status = status;
     }
