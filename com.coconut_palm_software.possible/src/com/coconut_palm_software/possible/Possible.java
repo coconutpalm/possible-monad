@@ -130,9 +130,33 @@ public abstract class Possible<T> implements Iterable<T> {
 
 	/**
 	 * Return the contents of the container as a typed array of the specified type.
+	 * <p>
+	 * The runtime type of the returned array is that of the specified array. If the 
+	 * specified array's size is >= 1, it is returned therein. Otherwise, a new 
+	 * array is allocated with the runtime type of the specified array and size==1.
+	 * <p>
+	 * If the array.size > 1, the element in the array immediately following the 
+	 * end of the list is set to null. (This is purely to match the contract of
+	 * java.util.List.
+	 * <p>
+	 * Like the toArray() method, this method acts as bridge between array-based 
+	 * and collection-based APIs. Further, this method allows precise control over 
+	 * the runtime type of the output array, and may, under certain circumstances, 
+	 * be used to save allocation costs.
+	 * <p>
+	 * Suppose x is a Possible known to contain only strings. The following code can be 
+	 * used to dump the Possible into a newly allocated array of String: 
+	 * String[] y = x.toArray(new String[0]);  Note that toArray(new Object[0]) is 
+	 * identical in function to toArray().
+	 *  
+	 * @param a the array into which the elements of the Possible are to be stored, 
+	 * if it is big enough; otherwise, a new array of the same runtime type is 
+	 * allocated for this purpose.
 	 * 
-	 * @param a The array to return, after any elemnts in this container are stored.
-	 * @return the contents of the container as a typed array of the specified type.
+	 * @return an array containing the Possible element, if any.
+	 * @throws java.lang.ArrayStoreException if the runtime type of the specified 
+	 * array is not a supertype of the runtime type of any element in this container
+	 * @throws java.lang.NullPointerException if the specified array is null
 	 */
 	abstract public <A> A[] toArray(A[] a);
 
