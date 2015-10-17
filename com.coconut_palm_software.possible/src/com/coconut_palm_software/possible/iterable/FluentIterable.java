@@ -18,33 +18,33 @@ package com.coconut_palm_software.possible.iterable;
  * @param <R>
  */
 public class FluentIterable<R> {
-	
+
 	private Iterable<R> source;
-	
+
 	private FluentIterable(Iterable<R> source) {
 		this.source = source;
 	}
 
-	public static <A> FluentIterable<A> iterateOver(Iterable<A> source) 
+	public static <A> FluentIterable<A> iterateOver(Iterable<A> source)
 	{
 		return new FluentIterable<A>(source);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public <T extends Iterable<R>> T result() { return (T) source; }
-	
+
 	@SuppressWarnings("unchecked")
-	public <Dest, IntermediateResults extends Iterable<Dest>, DestResults extends Iterable<Dest>> 
-		FluentIterable<Dest> transformAndConcat(F<R, IntermediateResults> func) 
+	public <Dest, IntermediateResults extends Iterable<Dest>, DestResults extends Iterable<Dest>>
+		FluentIterable<Dest> transformAndConcat(F<R, IntermediateResults> func)
 	{
 		Iterable<Dest> result = transformAndConcat(source, func);
 		return new FluentIterable<Dest>((DestResults) result);
 	}
-	
+
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	/* testable */<Source, SourceResults extends Iterable<Source>, 
-	Dest, IntermediateResults extends Iterable<Dest>, DestResults extends Iterable<Dest>> 
-		DestResults transformAndConcat(SourceResults source, F<Source, IntermediateResults> func) 
+	/* testable */<Source, SourceResults extends Iterable<Source>,
+	Dest, IntermediateResults extends Iterable<Dest>, DestResults extends Iterable<Dest>>
+		DestResults transformAndConcat(SourceResults source, F<Source, IntermediateResults> func)
 	{
 		UnitFunction resultContainer = new UnitFunction(source.getClass());
 		transform(source, func, resultContainer);
@@ -52,9 +52,9 @@ public class FluentIterable<R> {
 	}
 
 	@SuppressWarnings("rawtypes")
-	private <Dest, IntermediateResults extends Iterable<Dest>, Source, SourceResults extends Iterable<Source>> 
+	private <Dest, IntermediateResults extends Iterable<Dest>, Source, SourceResults extends Iterable<Source>>
 		void transform(SourceResults source, F<Source, IntermediateResults> func,
-						UnitFunction ResultContainer) 
+						UnitFunction ResultContainer)
 	{
 		for (Source a : (Iterable<Source>)source) {
 			IntermediateResults intermediateResults = func.apply(a);
@@ -63,12 +63,20 @@ public class FluentIterable<R> {
 	}
 
 	@SuppressWarnings("rawtypes")
-	private <Dest, IntermediateResults extends Iterable<Dest>> 
-		void concat(UnitFunction results, IntermediateResults intermediateResults) 
+	private <Dest, IntermediateResults extends Iterable<Dest>>
+		void concat(UnitFunction results, IntermediateResults intermediateResults)
 	{
 		for (Dest intermediateResult : intermediateResults) {
 			results.add(intermediateResult);
 		}
 	}
+
+    public <Dest> Dest reduce(F2<Dest, R, Dest> func, Dest initialValue) {
+        Dest accumulator = initialValue;
+        for (R element : source) {
+            accumulator = func.apply(accumulator, element);
+        }
+        return accumulator;
+    }
 }
 
