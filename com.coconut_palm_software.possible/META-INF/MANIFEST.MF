@@ -8,4 +8,5 @@ Bundle-Vendor: COCONUT_PALM_SOFTWARE
 Require-Bundle: org.eclipse.core.runtime
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Export-Package: com.coconut_palm_software.possible
+Export-Package: com.coconut_palm_software.possible,
+ com.coconut_palm_software.possible.iterable
