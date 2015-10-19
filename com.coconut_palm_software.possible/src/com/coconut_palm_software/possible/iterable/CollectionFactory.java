@@ -3,6 +3,7 @@ package com.coconut_palm_software.possible.iterable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +32,7 @@ public class CollectionFactory {
         return arrayList(ts);
     }
 
-    private static class KV<K,V> {
+    public static final class KV<K,V> {
         K k;
         V v;
         public KV(K k, V v) {
@@ -42,6 +43,14 @@ public class CollectionFactory {
 
     public static <K,V> KV<K,V> kv(K k, V v) {
         return new KV<K,V>(k, v);
+    }
+
+    public static <K,V> LinkedHashMap<K, V> linkedHashMap(KV<K,V>...kvs) {
+        LinkedHashMap<K,V> result = new LinkedHashMap<K,V>();
+        for (KV<K, V> kv : kvs) {
+            result.put(kv.k, kv.v);
+        }
+        return result;
     }
 
     public static <K, V> HashMap<K,V> hashMap(KV<K,V>... kvs) {
