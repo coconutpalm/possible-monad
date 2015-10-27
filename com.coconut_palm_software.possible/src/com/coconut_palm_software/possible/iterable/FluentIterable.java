@@ -2,10 +2,10 @@ package com.coconut_palm_software.possible.iterable;
 
 
 /**
- * A basic implementation of the monadic operations over Java's Iterable<T>.
+ * A basic implementation of the monadic operations over Java's Iterable&lt;T&gt;.
  * <p>
  * <code>
- * 	public static List<Tuple<String>> convertFileContentsToTrigrams(List<String> linesInFile) {
+ * 	public static List&lt;Tuple&lt;String&gt;&gt; convertFileContentsToTrigrams(List&lt;String&gt; linesInFile) {
  *		return iterateOver(linesInFile)
  *				.transformAndFlatten(new ConvertLineToWordList())
  *				.transformAndFlatten(new ConvertWordsToTrigrams())
@@ -15,7 +15,7 @@ package com.coconut_palm_software.possible.iterable;
  *
  * @author djo
  *
- * @param <R>
+ * @param <R> The result type
  */
 public class FluentIterable<R> {
 

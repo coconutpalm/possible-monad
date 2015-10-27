@@ -12,25 +12,22 @@ package com.coconut_palm_software.possible.internal;
 
 import java.util.Iterator;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-
-import com.coconut_palm_software.possible.Nulls;
 import com.coconut_palm_software.possible.Possible;
+import com.coconut_palm_software.possible.iterable.F;
 
 
 /**
  * An Possible instance that does not contain any value.
- * 
- * @param <T> The type that this Possible<T> is encapsulating.
+ *
+ * @param <T> The type that this Possible&lt;T&gt; is encapsulating.
  */
 public final class None<T> extends Possible<T> {
- 
-    private IStatus status = null;
+
+    private Object status = null;
 
     public None() {}
- 
-	public None(IStatus status) {
+
+	public None(Object status) {
 		this.status = status;
 	}
 
@@ -54,7 +51,7 @@ public final class None<T> extends Possible<T> {
 	public <E extends Throwable> T getOrThrow(E exception) throws E {
 		throw exception;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.e4.core.functionalprog.optionmonad.Option#hasValue()
 	 */
@@ -65,8 +62,9 @@ public final class None<T> extends Possible<T> {
 	/* (non-Javadoc)
 	 * @see org.eclipse.e4.core.functionalprog.optionmonad.Option#getReason()
 	 */
-	public IStatus getStatus() {
-		return Nulls.valueOrSubstitute(status, Status.CANCEL_STATUS);
+    @SuppressWarnings("unchecked")
+    public <S> S getStatus() {
+		return (S) status;
 	}
 
 	/* (non-Javadoc)
@@ -108,7 +106,7 @@ public final class None<T> extends Possible<T> {
 	public <A> A[] toArray(A[] a) {
 		return a;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Iterable#iterator()
 	 */
@@ -131,4 +129,12 @@ public final class None<T> extends Possible<T> {
 				throw new UnsupportedOperationException();
 			}};
 	}
+
+    /* (non-Javadoc)
+     * @see com.coconut_palm_software.possible.Possible#apply(com.coconut_palm_software.possible.iterable.F)
+     */
+    @Override
+    public <R> Possible<R> apply(F<T, R> f) {
+        return Possible.emptyValue();
+    }
 }

@@ -12,34 +12,32 @@ package com.coconut_palm_software.possible.internal;
 
 import java.util.Iterator;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-
 import com.coconut_palm_software.possible.Nulls;
 import com.coconut_palm_software.possible.Possible;
+import com.coconut_palm_software.possible.iterable.F;
 
 
 /**
  * An Possible instance that contains a value.
- * 
- * @param <T> The type that this Possible<T> is encapsulating.
+ *
+ * @param <T> The type that this Possible&lt;T&gt; is encapsulating.
  */
 public final class Some<T> extends Possible<T> {
     private final T value;
-    private IStatus status = null;
- 
+    private Object status = null;
+
     public Some(T value) {
     	Nulls.assertNotNull(value, "value");
         this.value = value;
     }
- 
-    public Some(T value, IStatus status) {
+
+    public Some(T value, Object status) {
     	Nulls.assertNotNull(value, "value");
     	Nulls.assertNotNull(status, "status");
         this.value = value;
         this.status = status;
     }
- 
+
     /* (non-Javadoc)
      * @see org.eclipse.e4.core.functionalprog.optionmonad.Option#get()
      */
@@ -60,7 +58,7 @@ public final class Some<T> extends Possible<T> {
 	public <E extends Throwable> T getOrThrow(E exception) {
 		return value;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.e4.core.functionalprog.optionmonad.Option#hasValue()
 	 */
@@ -71,8 +69,9 @@ public final class Some<T> extends Possible<T> {
 	/* (non-Javadoc)
 	 * @see org.eclipse.e4.core.functionalprog.optionmonad.Option#getStatus()
 	 */
-	public IStatus getStatus() {
-		return Nulls.valueOrSubstitute(status, Status.OK_STATUS);
+    @SuppressWarnings("unchecked")
+    public <S> S getStatus() {
+		return (S) status;
 	}
 
 	/* (non-Javadoc)
@@ -123,7 +122,7 @@ public final class Some<T> extends Possible<T> {
 		}
 		return a;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Iterable#iterator()
 	 */
@@ -151,5 +150,13 @@ public final class Some<T> extends Possible<T> {
 				throw new UnsupportedOperationException();
 			}};
 	}
+
+    /* (non-Javadoc)
+     * @see com.coconut_palm_software.possible.Possible#apply(com.coconut_palm_software.possible.iterable.F)
+     */
+    @Override
+    public <R> Possible<R> apply(F<T, R> f) {
+        return Possible.value(f.apply(value));
+    }
 }
- 
+

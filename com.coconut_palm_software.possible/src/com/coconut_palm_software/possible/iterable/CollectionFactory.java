@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -33,8 +34,8 @@ public class CollectionFactory {
     }
 
     public static final class KV<K,V> {
-        K k;
-        V v;
+        final K k;
+        final V v;
         public KV(K k, V v) {
             this.k = k;
             this.v = v;
@@ -73,6 +74,14 @@ public class CollectionFactory {
         return hashMap(kvs);
     }
 
+    public static <T> LinkedHashSet<T> linkedHashSet(T...ts) {
+        LinkedHashSet<T> result = new LinkedHashSet<T>();
+        for (T t : ts) {
+            result.add(t);
+        }
+        return result;
+    }
+
     public static <T> HashSet<T> hashSet(T...ts) {
         HashSet<T> result = new HashSet<T>();
         for (T t : ts) {
@@ -91,5 +100,41 @@ public class CollectionFactory {
 
     public static <T> Set<T> set(T...ts) {
         return hashSet(ts);
+    }
+
+    public static String[] array(String...results) {
+        return results;
+    }
+
+    public static byte[] array(byte...results) {
+        return results;
+    }
+
+    public static short[] array(short...results) {
+        return results;
+    }
+
+    public static int[] array(int...results) {
+        return results;
+    }
+
+    public static long[] array(long...results) {
+        return results;
+    }
+
+    public static float[] array(float...results) {
+        return results;
+    }
+
+    public static double[] array(double...results) {
+        return results;
+    }
+
+    public static boolean[] array(boolean...results) {
+        return results;
+    }
+
+    public static char[] array(char...results) {
+        return results;
     }
 }
