@@ -1,6 +1,9 @@
 package com.coconut_palm_software.possible.iterable.fn;
 
 import static com.coconut_palm_software.possible.iterable.FluentIterable.*;
+import static com.coconut_palm_software.possible.iterable.CollectionFactory.*;
+
+import java.util.List;
 
 import com.coconut_palm_software.possible.iterable.F2;
 
@@ -26,11 +29,14 @@ public class Join implements F2<String, String, String> {
      */
     @Override
     public String apply(String a, String b) {
+        if ("".equals(a)) {
+            return b;
+        }
         return a + separator + b;
     }
 
     /**
-     * Join an Iterable&lt;String&gt> source by concatinating its contents with the specified
+     * Join an Iterable&lt;String&gt; source by concatinating its contents with the specified
      * separator string.
      *
      * @param source The source Iterable&lt;String&gt;.
@@ -39,5 +45,11 @@ public class Join implements F2<String, String, String> {
      */
     public static String join(Iterable<String> source, String separator) {
         return iterateOver(source).reduce(new Join(separator), "");
+    }
+
+    public static void main(String[] args) {
+        List<String> test = list("Hello", "world");
+        String result = join(test, ", ");
+        assert result.equals("Hello, world");
     }
 }
