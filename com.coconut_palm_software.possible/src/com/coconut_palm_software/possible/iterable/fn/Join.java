@@ -36,12 +36,12 @@ public class Join implements F2<String, String, String> {
     }
 
     /**
-     * Join an Iterable&lt;String&gt; source by concatinating its contents with the specified
+     * Join an Iterable&lt;String&gt; source by concatenating its contents with the specified
      * separator string.
      *
      * @param source The source Iterable&lt;String&gt;.
      * @param separator The separator string.
-     * @return The concatinated String.
+     * @return The concatenated String.
      */
     public static String join(Iterable<String> source, String separator) {
         return iterateOver(source).reduce(new Join(separator), "");
