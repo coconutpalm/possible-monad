@@ -10,7 +10,7 @@
 
   <groupId>com.coconut_palm_software</groupId>
   <artifactId>com.coconut_palm_software.possible</artifactId>
-  <version>1.0.3</version>
+  <version>1.0.4</version>
   <packaging>jar</packaging>
 
   <name>${project.artifactId}</name>
