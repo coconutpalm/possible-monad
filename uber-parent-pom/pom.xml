@@ -4,11 +4,18 @@
 
   <groupId>com.coconut_palm_software</groupId>
   <artifactId>uber-parent-pom</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.1.1-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	  <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	  <maven-version>3.3</maven-version>
+	  <source-plugin-version>2.4</source-plugin-version>
+	  <javadoc-version>2.10.3</javadoc-version>
+	  <jar-plugin-version>2.6</jar-plugin-version>
+	  <deploy-plugin-version>2.8.2</deploy-plugin-version>       <!-- Needed with takari? -->
+	  <bundle-plugin-version>3.0.0</bundle-plugin-version>
+	  <takari-version>1.11.11</takari-version>
   </properties>
 
   <build>
@@ -16,54 +23,86 @@
       <plugin>
         <inherited>true</inherited>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-        <version>2.4</version>
-        <executions>
-          <execution>
-            <id>attach-sources</id>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
-        <inherited>true</inherited>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.10.3</version>
+        <version>${javadoc-version}</version>
         <executions>
           <execution>
             <id>attach-javadocs</id>
             <goals>
-              <goal>jar</goal>
+	            <goal>jar</goal>
             </goals>
           </execution>
         </executions>
       </plugin>
 
-      <!-- If you're creating an OSGi bundle / Eclipse plugin using a custom MANIFEST.MF
-        (e.g., using Eclipse PDE), you need to create a META-INF folder inside resources
-        and symlink your regular MANIFEST.MF file to resources/META-INF/MANIFEST.MF -->
-      <plugin>
-        <inherited>true</inherited>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <configuration>
-          <useDefaultManifestFile>true</useDefaultManifestFile>
-        </configuration>
-      </plugin>
-
+      <!--
       <plugin>
         <inherited>true</inherited>
         <artifactId>maven-deploy-plugin</artifactId>
+        <version>${deploy-plugin-version}</version>
         <configuration>
           <updateReleaseInfo>true</updateReleaseInfo>
         </configuration>
+      </plugin> -->
+
+      <!-- Build OSGi bundles by default -->
+      <plugin>
+	      <inherited>true</inherited>
+	      <groupId>org.apache.felix</groupId>
+	      <artifactId>maven-bundle-plugin</artifactId>
+	      <version>${bundle-plugin-version}</version>
+	      <executions>
+		      <execution>
+			      <id>bundle-manifest</id>
+			      <phase>compile</phase>
+			      <goals>
+				      <goal>manifest</goal>
+			      </goals>
+		      </execution>
+	      </executions>
+	      <configuration>
+		      <supportedProjectTypes>
+			      <supportedProjectType>jar</supportedProjectType>
+			      <supportedProjectType>bundle</supportedProjectType>
+			      <supportedProjectType>war</supportedProjectType>
+			      <supportedProjectType>takari-jar</supportedProjectType>
+		      </supportedProjectTypes>
+		      <instructions>
+			      <!-- none here; override if necessary -->
+		      </instructions>
+	      </configuration>
       </plugin>
 
-      <!-- Target for creating Eclipse/p2 repositories from your regular POM-based projects. -->
+      <!-- Fast incremental builds, please.  See: http://takari.io/book/40-lifecycle.html#the-takari-lifecycle -->
+      <plugin>
+	      <inherited>true</inherited>
+	      <groupId>io.takari.maven.plugins</groupId>
+	      <artifactId>takari-lifecycle-plugin</artifactId>
+	      <version>${takari-version}</version>
+	      <extensions>true</extensions>
+
+	      <executions>
+		      <execution>
+			      <id>compile</id>
+			      <goals>
+				      <goal>compile</goal>
+				      <goal>testCompile</goal>
+			      </goals>
+		      </execution>
+	      </executions>
+	      
+	      <configuration>
+		      <source>1.8</source>
+		      <target>1.7</target>
+		      
+		      <compilerId>jdt</compilerId>
+		      <accessRulesViolation>error</accessRulesViolation>
+		      <sourceJar>true</sourceJar>
+		      <testJar>true</testJar>
+		   </configuration>
+      </plugin>
+
+      <!-- Plugin for creating Eclipse/p2 repositories from your regular POM-based projects. -->
 
       <!-- To (re)generate your site run: mvn p2:site -->
       <!-- To serve your Eclipse P2 repository site run: mvn jetty:run -->
@@ -114,6 +153,23 @@
 
     </plugins>
 
+    <!-- Turn off the default (slow) compiler since we're using incremental builds -->
+    <pluginManagement>
+	    <plugins>
+		    <plugin>
+			    <inherited>true</inherited>
+			    <groupId>org.apache.maven.plugins</groupId>
+			    <artifactId>maven-compiler-plugin</artifactId>
+			    <version>3.3</version>
+			    <configuration>
+				    <skip>true</skip>
+				    <skipMain>true</skipMain>
+			    </configuration>
+		    </plugin>
+	    </plugins>
+    </pluginManagement>
+
   </build>
 
 </project>
+

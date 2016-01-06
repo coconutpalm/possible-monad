@@ -5,13 +5,13 @@
   <parent>
     <groupId>com.coconut_palm_software</groupId>
     <artifactId>uber-parent-pom</artifactId>
-    <version>1.0.0-snapshot</version>
+    <version>1.1.1-SNAPSHOT</version>
   </parent>
 
   <groupId>com.coconut_palm_software</groupId>
   <artifactId>com.coconut_palm_software.possible</artifactId>
   <version>1.0.4</version>
-  <packaging>jar</packaging>
+  <packaging>takari-jar</packaging>
 
   <name>${project.artifactId}</name>
   <description>Possible collection, Iterable utilities, and Collection factories</description>
