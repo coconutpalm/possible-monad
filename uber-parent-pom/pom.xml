@@ -18,6 +18,16 @@
 	  <takari-version>1.11.11</takari-version>
   </properties>
 
+  <repositories>
+    <repository>
+	    <id>eclipse</id>
+	    <name>Eclipse M2 repository</name>
+	    <url>http://repo.eclipse.org/</url>
+    </repository>
+    <!-- Add clojars -->
+  </repositories>
+
+
   <build>
     <plugins>
       <plugin>
@@ -29,7 +39,7 @@
           <execution>
             <id>attach-javadocs</id>
             <goals>
-	            <goal>jar</goal>
+	            <goal>deploy</goal>
             </goals>
           </execution>
         </executions>
