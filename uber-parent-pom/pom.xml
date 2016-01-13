@@ -2,21 +2,34 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
+  <!-- Adapted from the Takari parent pom.  Thanks to JVZ et al for a good example starting point for
+       working with Takari. -->
+
   <groupId>com.coconut_palm_software</groupId>
   <artifactId>uber-parent-pom</artifactId>
   <version>1.1.1-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <properties>
-	  <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	  <maven-version>3.3</maven-version>
-	  <source-plugin-version>2.4</source-plugin-version>
-	  <javadoc-version>2.10.3</javadoc-version>
-	  <jar-plugin-version>2.6</jar-plugin-version>
-	  <deploy-plugin-version>2.8.2</deploy-plugin-version>       <!-- Needed with takari? -->
-	  <bundle-plugin-version>3.0.0</bundle-plugin-version>
-	  <takari-version>1.11.11</takari-version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven-version>3.3</maven-version>
+    <javadoc-version>2.10.3</javadoc-version>
+    <bundle-plugin-version>3.0.0</bundle-plugin-version>
+    <takari-version>1.11.11</takari-version>
   </properties>
+
+  <repositories>
+    <repository>
+      <id>eclipse.org</id>
+      <name>Eclipse's m2 repo</name>
+      <url>http://repo.eclipse.org</url>
+    </repository>
+    <repository>
+      <id>clojars.org</id>
+      <name>Clojure's home repo</name>
+      <url>http://clojars.org/repo</url>
+    </repository>
+  </repositories>
 
   <build>
     <plugins>
@@ -29,90 +42,309 @@
           <execution>
             <id>attach-javadocs</id>
             <goals>
-	            <goal>jar</goal>
+              <goal>deploy</goal>
             </goals>
           </execution>
         </executions>
       </plugin>
 
-      <!--
-      <plugin>
-        <inherited>true</inherited>
-        <artifactId>maven-deploy-plugin</artifactId>
-        <version>${deploy-plugin-version}</version>
-        <configuration>
-          <updateReleaseInfo>true</updateReleaseInfo>
-        </configuration>
-      </plugin> -->
-
       <!-- Build OSGi bundles by default -->
       <plugin>
-	      <inherited>true</inherited>
-	      <groupId>org.apache.felix</groupId>
-	      <artifactId>maven-bundle-plugin</artifactId>
-	      <version>${bundle-plugin-version}</version>
-	      <executions>
-		      <execution>
-			      <id>bundle-manifest</id>
-			      <phase>compile</phase>
-			      <goals>
-				      <goal>manifest</goal>
-			      </goals>
-		      </execution>
-	      </executions>
-	      <configuration>
-		      <supportedProjectTypes>
-			      <supportedProjectType>jar</supportedProjectType>
-			      <supportedProjectType>bundle</supportedProjectType>
-			      <supportedProjectType>war</supportedProjectType>
-			      <supportedProjectType>takari-jar</supportedProjectType>
-		      </supportedProjectTypes>
-		      <instructions>
-			      <!-- none here; override if necessary -->
-		      </instructions>
-	      </configuration>
+        <inherited>true</inherited>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <version>${bundle-plugin-version}</version>
+        <executions>
+          <execution>
+            <id>bundle-manifest</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>manifest</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <supportedProjectTypes>
+            <supportedProjectType>jar</supportedProjectType>
+            <supportedProjectType>bundle</supportedProjectType>
+            <supportedProjectType>war</supportedProjectType>
+            <supportedProjectType>takari-jar</supportedProjectType>
+          </supportedProjectTypes>
+          <instructions>
+            <!-- none here; override if necessary -->
+          </instructions>
+        </configuration>
       </plugin>
 
-      <!-- Fast incremental builds, please.  See: http://takari.io/book/40-lifecycle.html#the-takari-lifecycle -->
+      <!-- Fast incremental builds, please. See: http://takari.io/book/40-lifecycle.html#the-takari-lifecycle -->
       <plugin>
-	      <inherited>true</inherited>
-	      <groupId>io.takari.maven.plugins</groupId>
-	      <artifactId>takari-lifecycle-plugin</artifactId>
-	      <version>${takari-version}</version>
-	      <extensions>true</extensions>
+        <inherited>true</inherited>
+        <groupId>io.takari.maven.plugins</groupId>
+        <artifactId>takari-lifecycle-plugin</artifactId>
+        <version>${takari-version}</version>
+        <extensions>true</extensions>
 
-	      <executions>
-		      <execution>
-			      <id>compile</id>
-			      <goals>
-				      <goal>compile</goal>
-				      <goal>testCompile</goal>
-			      </goals>
-		      </execution>
-	      </executions>
-	      
-	      <configuration>
-		      <source>1.8</source>
-		      <target>1.7</target>
-		      
-		      <compilerId>jdt</compilerId>
-		      <accessRulesViolation>error</accessRulesViolation>
-		      <sourceJar>true</sourceJar>
-		      <testJar>true</testJar>
-		   </configuration>
+        <executions>
+          <execution>
+            <id>compile</id>
+            <goals>
+              <goal>compile</goal>
+              <goal>testCompile</goal>
+            </goals>
+          </execution>
+        </executions>
+
+        <configuration>
+          <source>1.8</source>
+          <target>1.7</target>
+
+          <compilerId>jdt</compilerId>
+          <accessRulesViolation>error</accessRulesViolation>
+          <sourceJar>true</sourceJar>
+          <testJar>true</testJar>
+          <transitiveDependencyReference>error</transitiveDependencyReference>
+          <privatePackageReference>error</privatePackageReference>
+          <proc>none</proc>
+        </configuration>
       </plugin>
 
-      <!-- Plugin for creating Eclipse/p2 repositories from your regular POM-based projects. -->
+      <!-- set versions/configuration of common plugins for reproducibility,
+        ordered alphabetically -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.7</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>2.5.3</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-clean-plugin</artifactId>
+        <version>2.6.1</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.2</version>
+        <configuration>
+          <!-- disable accidental use, must use takari-lifecycle -->
+          <skip>true</skip>
+          <skipMain>true</skipMain>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <version>2.8.2</version>
+        <configuration>
+          <!-- disable accidental use, must use takari-lifecycle -->
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-docck-plugin</artifactId>
+        <version>1.0</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>1.3.1</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <version>1.5</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-install-plugin</artifactId>
+        <version>2.5.2</version>
+        <configuration>
+          <!-- disable accidental use, must use takari-lifecycle -->
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.5</version>
+        <configuration>
+          <!-- disable accidental use, must use takari-lifecycle -->
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+      <!-- START SNIPPET: release-plugin-configuration -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>2.5.2</version>
+        <configuration>
+          <localCheckout>true</localCheckout>
+          <pushChanges>false</pushChanges>
+          <useReleaseProfile>false</useReleaseProfile>
+          <autoVersionSubmodules>true</autoVersionSubmodules>
+          <goals>deploy</goals>
+          <arguments>--batch-mode -Ptakari-release</arguments>
+        </configuration>
+      </plugin>
+      <!-- END SNIPPET: release-plugin-configuration -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-remote-resources-plugin</artifactId>
+        <version>1.5</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>2.7</version>
+        <configuration>
+          <!-- disable accidental use, must use takari-lifecycle -->
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-scm-plugin</artifactId>
+        <version>1.9.2</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+        <version>3.4</version>
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.maven.wagon</groupId>
+            <artifactId>wagon-ssh</artifactId>
+            <version>2.8</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>2.4</version>
+        <configuration>
+          <!-- disable accidental use, must use takari-lifecycle -->
+          <skipSource>true</skipSource>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.18</version>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>animal-sniffer-maven-plugin</artifactId>
+        <version>1.13</version>
+        <configuration>
+          <signature>
+            <groupId>org.codehaus.mojo.signature</groupId>
+            <artifactId>java17</artifactId>
+            <version>1.0</version>
+          </signature>
+        </configuration>
+        <executions>
+          <execution>
+            <id>check-java-api-usage</id>
+            <phase>test</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>com.mycila</groupId>
+        <artifactId>license-maven-plugin</artifactId>
+        <version>2.6</version>
+        <configuration>
+          <aggregate>true</aggregate>
+          <strictCheck>true</strictCheck>
+          <header>http://www.coconut-palm-software.com/license.txt</header>
+          <useDefaultExcludes>false</useDefaultExcludes>
+          <includes>
+            <include>**/pom.xml</include>
+            <include>**/*.xml</include>
+            <include>**/*.xsd</include>
+            <include>**/*.xjb</include>
+            <include>**/*.mdo</include>
+            <include>**/*.properties</include>
+            <include>**/*.java</include>
+            <include>**/*.groovy</include>
+            <include>**/*.scala</include>
+            <include>**/*.aj</include>
+            <include>**/*.js</include>
+            <include>**/*.css</include>
+          </includes>
+          <excludes>
+            <exclude>**/target/**</exclude>
+            <exclude>**/conf/**</exclude>
+            <exclude>**/.*</exclude>
+            <exclude>**/pkg/**</exclude>
+            <exclude>**/.idea/**</exclude>
+            <exclude>**/release.properties</exclude>
+            <exclude>**/pom.xml.releaseBackup</exclude>
+            <exclude>release.sh</exclude>
+            <exclude>**/src/test/**</exclude>
+          </excludes>
+          <mapping>
+            <scala>JAVADOC_STYLE</scala>
+            <xjb>XML_STYLE</xjb>
+            <mdo>XML_STYLE</mdo>
+          </mapping>
+        </configuration>
+      </plugin>
+      <!--This plugin's configuration is used to store Eclipse m2e settings
+        only. It has no influence on the Maven build itself. -->
+      <plugin>
+        <groupId>org.eclipse.m2e</groupId>
+        <artifactId>lifecycle-mapping</artifactId>
+        <version>1.0.0</version>
+        <configuration>
+          <lifecycleMappingMetadata>
+            <pluginExecutions>
+              <pluginExecution>
+                <pluginExecutionFilter>
+                  <groupId>io.tesla.maven.plugins</groupId>
+                  <artifactId>tesla-license-plugin</artifactId>
+                  <versionRange>[1.0.0,)</versionRange>
+                  <goals>
+                    <goal>check</goal>
+                  </goals>
+                </pluginExecutionFilter>
+                <action>
+                  <ignore />
+                </action>
+              </pluginExecution>
+            </pluginExecutions>
+          </lifecycleMappingMetadata>
+        </configuration>
+      </plugin>
+
+
+      <!-- Plugin for creating Eclipse/p2 repositories from your regular
+        POM-based projects. To use, depend on this parent pom, then
+        add a configuration section like the example below.  More docs
+        are available on the org.reficio site. -->
 
       <!-- To (re)generate your site run: mvn p2:site -->
       <!-- To serve your Eclipse P2 repository site run: mvn jetty:run -->
-      <!--   ...then you can add http://localhost:8080 to your Eclipse dependencies to access this site. -->
+      <!-- ...then you can add http://localhost:8080 to your Eclipse dependencies
+        to access this site. -->
 
-      <!-- To add your own artifacts to the generated site, add configuration/artifacts. to this plugin in the child POM.-->
-      <!-- Notes: (1) Transitive dependencies will automatically be included in the site. -->
-      <!--   (2) Anything that isn't already an OSGi bundle will automatically be bundled by bnd. -->
+      <!-- To add your own artifacts to the generated site, add configuration/artifacts.
+        to this plugin in the child POM. -->
+      <!-- Notes: (1) Transitive dependencies will automatically be included
+        in the site. -->
+      <!-- (2) Anything that isn't already an OSGi bundle will automatically
+        be bundled by bnd. -->
 
-      <!-- See also:  https://github.com/reficio/p2-maven-plugin -->
+      <!-- See also: https://github.com/reficio/p2-maven-plugin -->
       <plugin>
         <inherited>true</inherited>
         <groupId>org.reficio</groupId>
@@ -122,16 +354,9 @@
           <execution>
             <id>default-cli</id>
 
-            <!-- Configuration example
-            <configuration>
-              <artifacts>
-                <artifact>
-                  <id>com.coconut_palm_software:com.coconut_palm_software.possible:1.0.0-SNAPSHOT</id>
-                  <source>true</source>
-                </artifact>
-              </artifacts>
-            </configuration>
-             -->
+            <!-- Configuration example <configuration> <artifacts> <artifact>
+              <id>com.coconut_palm_software:com.coconut_palm_software.possible:1.0.0-SNAPSHOT</id>
+              <source>true</source> </artifact> </artifacts> </configuration> -->
 
           </execution>
         </executions>
@@ -153,20 +378,21 @@
 
     </plugins>
 
-    <!-- Turn off the default (slow) compiler since we're using incremental builds -->
+    <!-- Turn off the default (slow) compiler since we're using incremental
+      builds -->
     <pluginManagement>
-	    <plugins>
-		    <plugin>
-			    <inherited>true</inherited>
-			    <groupId>org.apache.maven.plugins</groupId>
-			    <artifactId>maven-compiler-plugin</artifactId>
-			    <version>3.3</version>
-			    <configuration>
-				    <skip>true</skip>
-				    <skipMain>true</skipMain>
-			    </configuration>
-		    </plugin>
-	    </plugins>
+      <plugins>
+        <plugin>
+          <inherited>true</inherited>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.3</version>
+          <configuration>
+            <skip>true</skip>
+            <skipMain>true</skipMain>
+          </configuration>
+        </plugin>
+      </plugins>
     </pluginManagement>
 
   </build>
