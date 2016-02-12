@@ -533,7 +533,7 @@
 				  <aggregate>true</aggregate>
 				  <strictCheck>true</strictCheck>
 				  <licenseName>epl_v1</licenseName>
-				  <!-- <header>http://www.coconut-palm-software.com/license.txt</header>
+				  <!-- <header>http://www.coconut-palm-software.com/license.txt</header> -->
 				  <useDefaultExcludes>false</useDefaultExcludes>
 				  <includes>
 					  <include>**/pom.xml</include>
