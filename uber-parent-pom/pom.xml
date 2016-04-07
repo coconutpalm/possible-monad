@@ -13,7 +13,6 @@
 	  <source-plugin-version>2.4</source-plugin-version>
 	  <javadoc-version>2.10.3</javadoc-version>
 	  <jar-plugin-version>2.6</jar-plugin-version>
-	  <deploy-plugin-version>2.8.2</deploy-plugin-version>       <!-- Needed with takari? -->
 	  <bundle-plugin-version>3.0.0</bundle-plugin-version>
 	  <takari-version>1.11.11</takari-version>
   </properties>
@@ -39,21 +38,11 @@
           <execution>
             <id>attach-javadocs</id>
             <goals>
-	            <goal>deploy</goal>
+	            <goal>jar</goal>
             </goals>
           </execution>
         </executions>
       </plugin>
-
-      <!--
-      <plugin>
-        <inherited>true</inherited>
-        <artifactId>maven-deploy-plugin</artifactId>
-        <version>${deploy-plugin-version}</version>
-        <configuration>
-          <updateReleaseInfo>true</updateReleaseInfo>
-        </configuration>
-      </plugin> -->
 
       <!-- Build OSGi bundles by default -->
       <plugin>
