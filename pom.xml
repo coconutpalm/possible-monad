@@ -8,9 +8,9 @@
     <version>1.3.0</version>
   </parent>
 
-  <groupId>com.coconut_palm_software</groupId>
+  <groupId>com.github.coconutpalm</groupId>
   <artifactId>com.coconut_palm_software.possible</artifactId>
-  <version>1.0.4</version>
+  <version>1.0.5</version>
   <packaging>takari-jar</packaging>
 
   <name>${project.artifactId}</name>
