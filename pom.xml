@@ -10,7 +10,7 @@
 
   <groupId>com.github.coconutpalm</groupId>
   <artifactId>com.coconut_palm_software.possible</artifactId>
-  <version>1.0.5</version>
+  <version>1.0.6</version>
   <packaging>takari-jar</packaging>
 
   <name>${project.artifactId}</name>
