@@ -17,7 +17,6 @@ An improved version of: http://git.eclipse.org/c/e4/org.eclipse.e4.utils.git/tre
 </repositories>
 ````
 
-* ArtifactID: com.github.coconutpalm
-* GroupID: possible-monad
+* GroupID: com.github.coconutpalm
+* ArtifactID: possible-monad
 * Version: [![Release](http://jitpack.io/v/com.github.coconutpalm/possible-monad.svg)](https://jitpack.io/#coconutpalm/possible-monad)
-
